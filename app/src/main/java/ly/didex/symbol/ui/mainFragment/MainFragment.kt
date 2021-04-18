@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import ly.didex.symbol.RequestStatus
+import ly.didex.symbol.ui.RequestStatus
 import ly.didex.symbol.databinding.MainFragmentBinding
 import ly.didex.symbol.model.Symbol
 import ly.didex.symbol.ui.mainFragment.adapter.SymbolAdapter
@@ -61,6 +59,7 @@ class MainFragment : Fragment(), LifecycleObserver {
                         viewModel.isRetry = false
                         binding?.swipeRefreshLayout!!.isRefreshing =false
                     }
+                    Toast.makeText(context,requestStatues.errorMessage, Toast.LENGTH_LONG).show()
                 }
                 else -> Unit
             }

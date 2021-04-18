@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="ly.didex.symbol.RequestStatus" />
+        <import type="ly.didex.symbol.ui.RequestStatus" />
 
         <import type="android.view.View" />
 

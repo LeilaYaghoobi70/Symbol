@@ -1,4 +1,4 @@
-package ly.didex.symbol
+package ly.didex.symbol.ui
 
 import ly.didex.symbol.model.Symbol
 

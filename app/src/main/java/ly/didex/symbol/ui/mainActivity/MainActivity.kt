@@ -1,8 +1,9 @@
-package ly.didex.symbol
+package ly.didex.symbol.ui.mainActivity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
+import ly.didex.symbol.R
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

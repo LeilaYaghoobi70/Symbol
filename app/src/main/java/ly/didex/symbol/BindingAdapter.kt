@@ -2,9 +2,9 @@ package ly.didex.symbol
 
 import android.view.View
 import android.widget.ImageView
-import android.widget.ProgressBar
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import ly.didex.symbol.ui.RequestStatus
 
 object BindingAdapter {
     @BindingAdapter(value = ["handel_loading"], requireAll = true)
