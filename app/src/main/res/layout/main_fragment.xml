@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="ly.didex.symbol.ui.RequestStatus" />
-
         <import type="android.view.View" />
 
         <variable
@@ -29,18 +27,18 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
-                handel_visibility="@{viewmodel.symbolLiveData}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
+                android:visibility="gone"
                 android:scrollbars="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <ProgressBar
+            android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
-            handel_loading="@{viewmodel.symbolLiveData}"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:indeterminate="true"
@@ -50,10 +48,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            handel_error="@{viewmodel.symbolLiveData}"
+            android:id="@+id/errorImageView"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:background="@drawable/error_image"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

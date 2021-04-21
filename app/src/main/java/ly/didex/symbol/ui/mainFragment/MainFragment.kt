@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleObserver
 import dagger.hilt.android.AndroidEntryPoint
-import ly.didex.symbol.ui.RequestStatus
 import ly.didex.symbol.databinding.MainFragmentBinding
-import ly.didex.symbol.model.Symbol
+import ly.didex.symbol.ui.Failure
+import ly.didex.symbol.ui.Success
 import ly.didex.symbol.ui.mainFragment.adapter.SymbolAdapter
 
 @AndroidEntryPoint
@@ -34,7 +35,7 @@ class MainFragment : Fragment(), LifecycleObserver {
             recyclerView.adapter = this@MainFragment.adapter
 
             swipeRefreshLayout.setOnRefreshListener {
-                viewModel.retry()
+                observeSymbols()
             }
         }
         return binding?.root
@@ -43,23 +44,48 @@ class MainFragment : Fragment(), LifecycleObserver {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        super.onCreate(savedInstanceState)
-        viewModel.symbolLiveData.observe(viewLifecycleOwner, { requestStatues ->
+        observeSymbols()
+    }
+
+    private fun observeSymbols() {
+        viewModel.getSymbol().observe(viewLifecycleOwner, { requestStatues ->
             when (requestStatues) {
-                is RequestStatus.SUCCESS -> {
-                    if (binding?.swipeRefreshLayout!!.isRefreshing){
-                        binding?.swipeRefreshLayout!!.isRefreshing =false
-                        viewModel.isRetry = false
+                is Success -> {
+                    binding?.apply {
+                        swipeRefreshLayout.apply {
+                            if (isRefreshing) {
+                                isRefreshing = false
+                                viewModel.isRetry = false
+                            }
+                        }
+                        progressBar.apply {
+                            if (isVisible)
+                                visibility = View.GONE
+                        }
+                        errorImageView.apply {
+                            if (isVisible)
+                                visibility = View.GONE
+                        }
+                        recyclerView.visibility = View.VISIBLE
                     }
-                    viewModel.symbols = requestStatues.symbols as ArrayList<Symbol>
                     adapter.submitList(viewModel.symbols)
                 }
-                is RequestStatus.ERROR  -> {
-                    if (binding?.swipeRefreshLayout!!.isRefreshing){
-                        viewModel.isRetry = false
-                        binding?.swipeRefreshLayout!!.isRefreshing =false
+                is Failure -> {
+                    binding?.apply {
+                        swipeRefreshLayout.apply {
+                            if (isRefreshing) {
+                                isRefreshing = false
+                                viewModel.isRetry = false
+                            }
+                        }
+                        progressBar.apply {
+                            if (isVisible)
+                                visibility = View.GONE
+                        }
+                        errorImageView.visibility = View.VISIBLE
                     }
-                    Toast.makeText(context,requestStatues.errorMessage, Toast.LENGTH_LONG).show()
+
+                    Toast.makeText(context, requestStatues.reason, Toast.LENGTH_LONG).show()
                 }
                 else -> Unit
             }

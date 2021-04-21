@@ -74,5 +74,9 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
+    //coroutines library
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'
 
+    //liveData library
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
 }

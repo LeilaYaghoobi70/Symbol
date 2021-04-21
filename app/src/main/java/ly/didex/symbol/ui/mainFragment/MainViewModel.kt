@@ -1,17 +1,18 @@
 package ly.didex.symbol.ui.mainFragment
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.internal.util.NotificationLite.error
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import ly.didex.symbol.ui.RequestStatus
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import ly.didex.symbol.model.Symbol
 import ly.didex.symbol.repository.SymbolRepository
+import ly.didex.symbol.ui.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,20 +21,28 @@ class MainViewModel @Inject constructor(
     private val symbolRepository: SymbolRepository
 ) : ViewModel() {
 
-    private val _symbolMutableLiveData = MutableLiveData<RequestStatus>()
-    val symbolLiveData: LiveData<RequestStatus> = _symbolMutableLiveData
+    /*private val _symbolMutableLiveData = MutableLiveData<RequestStatus>()
+    val symbolLiveData: LiveData<RequestStatus> = _symbolMutableLiveData*/
 
     var symbols = ArrayList<Symbol>()
 
-    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
+  //  private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     var isRetry = false
 
-    init {
+    fun getSymbol() = liveData(Dispatchers.IO) {
+        emit(Loading(loading = true))
+        try {
+            symbols = symbolRepository.getSymbols() as ArrayList<Symbol>
+            emit(Success(Unit))
+        } catch (ioException: Exception) {
+            emit(Failure(ioException.message!!))
+        }
+    }
+/*    init {
         getSymbols()
     }
-
     private fun getSymbols() {
-        compositeDisposable.add(
+       compositeDisposable.add(
             symbolRepository.getSymbols()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -54,15 +63,14 @@ class MainViewModel @Inject constructor(
                 )
         )
 
-    }
+    }*/
 
-    fun retry(){
+   /* fun retry() {
         isRetry = true
-        getSymbols()
-    }
+    }*/
 
-    override fun onCleared() {
+/*    override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
-    }
+    }*/
 }
